@@ -1,0 +1,36 @@
+<idea-plugin>
+  <id>de.wayofquality.codacy.scalameta</id>
+  <name>Codacy Scalameta checks</name>
+  <version>1.0</version>
+  <vendor email="andreas@wayofquality.de" url="https://github.com/woq-blended">WoQ - Way of Quality GmbH</vendor>
+
+  <description><![CDATA[
+      Run the code inspection defined in Codacy-ScalaMeta.<br>
+    ]]></description>
+
+  <change-notes><![CDATA[
+    Initial draft
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="191.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <!-- uncomment to enable plugin in all products
+  <depends>com.intellij.modules.lang</depends>
+  -->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <group id="de.wayofquality.codacy.scalameta.SampleMenu" text="_Sample Menu" description="Sample menu">
+      <add-to-group group-id="MainMenu" anchor="last"  />
+      <action id="Codacy.Textboxes" class="de.wayofquality.codacy.scalameta.TextBoxes" text="Text _Boxes" description="A test menu item" />
+    </group>
+  </actions>
+
+</idea-plugin>
