@@ -3,7 +3,9 @@ package de.wayofquality.codacy.scalameta
 import com.codacy.plugins.api.results.Result
 import com.intellij.codeInspection.{InspectionManager, LocalQuickFix, ProblemDescriptor, ProblemHighlightType}
 import com.intellij.openapi.editor.Document
-import com.intellij.psi.{PsiDocumentManager, PsiElement, PsiFile}
+import com.intellij.psi.{PsiDocumentManager, PsiElement, PsiFile, PsiRecursiveElementVisitor}
+
+import scala.collection.mutable
 
 case class ResultToProblemDescriptorConverter(
   file: PsiFile,
@@ -31,32 +33,32 @@ case class ResultToProblemDescriptorConverter(
           0
         }
 
-        println("*" * 80)
         val start = document.getLineStartOffset(correctLine)
         val end = document.getLineEndOffset(correctLine)
 
-        println(s"$start - $end, [${document.getText().substring(start, end)}]")
+        val lineElements : mutable.ListBuffer[(PsiElement, Int)] = mutable.ListBuffer.empty
 
         val element = file.findElementAt(start).getParent
-        println(element.getText())
 
-        val sameLineChildren = element.getChildren.filter { e =>
-          start <= e.getTextRange().getStartOffset() && e.getTextRange().getEndOffset() <= end
-        }
+        element.accept(new PsiRecursiveElementVisitor() {
+          override def visitElement(e: PsiElement): Unit = {
+            if (start <= e.getTextRange().getStartOffset() && e.getTextRange().getEndOffset() <= end) {
+              lineElements.append((e, e.getTextLength()))
+            }
+            e.acceptChildren(this)
+          }
+        })
 
-        println(sameLineChildren.mkString("--", "\n---\n", ""))
+        val lineElement : PsiElement = lineElements.sortBy(_._2).lastOption.map(_._1).getOrElse(file.findElementAt(start))
 
         val desc : ProblemDescriptor = manager.createProblemDescriptor(
-          sameLineChildren.head,
+          lineElement,
           issue.message.value,
           Array.empty[LocalQuickFix],
           levelToProblemtype(descriptions.get(issue.patternId.value).map(_.level).getOrElse("unknown")),
           true,
           false
         )
-        println("created description")
-
-        println("*" * 80)
         Some(desc)
 
       case _ => None

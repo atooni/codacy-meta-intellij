@@ -32,9 +32,6 @@ class CodacyMetaChecker extends LocalInspectionTool {
         log.error(s"Failed to run Codacy Meta Inspection : [${e.getMessage()}]")
         Array.empty
     }
-
-    println(s"Found [${result.length}] problems")
-
     result
   }
 
@@ -50,8 +47,6 @@ class CodacyMetaChecker extends LocalInspectionTool {
     fileName : String,
     checks : Map[Pattern.Id, Pattern]
   ) : Try[List[Result]] = {
-
-    println(s"Applying [$checks] to [$fileName]")
 
     // This applies a single pattern to a parsed file and yields the Results for this pattern
     val checkParsedFile : Source => (Pattern.Id, Pattern) => List[Result] =
