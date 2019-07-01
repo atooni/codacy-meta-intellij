@@ -23,14 +23,11 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
+    <!--Scalastyle inspection-->
+    <localInspection implementationClass="de.wayofquality.codacy.scalameta.CodacyMetaChecker"
+                     displayName="Codacy Meta Code Inspection" groupPath="Scala" groupName="Code Style"
+                     shortName="codacyMetaChecks"
+                     enabledByDefault="true" language="Scala"/>
   </extensions>
-
-  <actions>
-    <group id="de.wayofquality.codacy.scalameta.SampleMenu" text="_Sample Menu" description="Sample menu">
-      <add-to-group group-id="MainMenu" anchor="last"  />
-      <action id="Codacy.Textboxes" class="de.wayofquality.codacy.scalameta.TextBoxes" text="Text _Boxes" description="A test menu item" />
-    </group>
-  </actions>
 
 </idea-plugin>

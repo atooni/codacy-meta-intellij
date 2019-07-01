@@ -44,6 +44,8 @@ lazy val codacymetaIntellij = (project in file("codacy-meta-intellij")).
   settings(commonSettings).
   settings(
     name := "codacy-meta-intellij",
+    ideaPluginName := "codacymetaIntellij",
+
     description := "Run Codacy Scalameta inspections on Scala code",
 
     ideaInternalPlugins := Seq(
@@ -55,6 +57,11 @@ lazy val codacymetaIntellij = (project in file("codacy-meta-intellij")).
     libraryDependencies ++= Seq(
       "com.codacy" %% "codacy-plugins-api" % "3.0.96",
       "com.codacy" %% "codacy-engine-scala-seed" % "3.0.168",
-      "org.scalameta" %% "scalameta" % "4.1.9"
+      "org.scalameta" %% "scalameta" % "4.0.0",
+      "org.scalameta" %% "parsers" % "4.0.0",
+      "org.scalameta" %% "trees" % "4.0.0",
+      "org.scalameta" %% "common" % "4.0.0",
+      "org.scalameta" %% "fastparse" % "1.0.0",
+      "org.scalameta" %% "fastparse-utils" % "1.0.0"
     )
   )
