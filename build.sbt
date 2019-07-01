@@ -40,7 +40,7 @@ lazy val root = (project in file(".")).
   aggregate(codacymetaIntellij)
 
 lazy val codacymetaIntellij = (project in file("codacy-meta-intellij")).
-  enablePlugins(SbtIdeaPlugin). // See https://github.com/JetBrains/sbt-idea-plugin for documentation
+  enablePlugins(SbtIdeaPlugin).
   settings(commonSettings).
   settings(
     name := "codacy-meta-intellij",
@@ -52,16 +52,27 @@ lazy val codacymetaIntellij = (project in file("codacy-meta-intellij")).
       "IntelliLang",
     ),
 
-    Compile/unmanagedClasspath ++= Option((baseDirectory.value / "lib").listFiles()).toList.flatMap(_.toList),
+    ideaExternalPlugins +=
+      IdeaPlugin.Zip("Scala", url("https://plugins.jetbrains.com/files/1347/61993/scala-intellij-bin-2019.1.8.zip")),
+
+    Compile/unmanagedClasspath ++=
+      Option((baseDirectory.value / "lib").listFiles()).toList.flatMap(_.toList),
+
+    packageFileMappings ++=
+      Option((baseDirectory.value / "lib").listFiles()).toList.flatMap(_.toSeq)
+      .map(f => (f, "lib/" + f.getName())),
+
+    packageLibraryMappings ++= Seq(
+      "org.scalameta" %% ".*" % "4.0.0" -> Some("lib/scalameta.jar")
+    ),
 
     libraryDependencies ++= Seq(
       "com.codacy" %% "codacy-plugins-api" % "3.0.96",
       "com.codacy" %% "codacy-engine-scala-seed" % "3.0.168",
-      "org.scalameta" %% "scalameta" % "4.0.0",
-      "org.scalameta" %% "parsers" % "4.0.0",
-      "org.scalameta" %% "trees" % "4.0.0",
-      "org.scalameta" %% "common" % "4.0.0",
-      "org.scalameta" %% "fastparse" % "1.0.0",
-      "org.scalameta" %% "fastparse-utils" % "1.0.0"
-    )
+      "org.scalameta" %% "scalameta" % "4.0.0"
+    ),
+
+    ideaFullJars := {
+      ideaFullJars.value.filter(af => !af.data.getName().startsWith("scalameta"))
+    }
   )
